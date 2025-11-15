@@ -2,3 +2,4 @@ plotly>=5.17.0
 matplotlib>=3.8.0
 numpy>=1.24.3
 mgrs>=1.4.6
+pyproj>=3.6.0
