@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 with open("requirements.txt") as f:
     requirements = f.read().splitlines()
 
-with open("QUICKSTART.md", encoding="utf-8") as f:
+with open("README.md", encoding="utf-8") as f:
     long_description = f.read()
 
 setup(
@@ -40,7 +40,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "solar-regatta=solar_regatta.web.app:app",
+            "solar-regatta=solar_regatta.cli:main",
         ],
     },
 )
