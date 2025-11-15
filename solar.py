@@ -1,11 +1,13 @@
 import pyproj
 import mgrs
 import matplotlib.pyplot as plt
-import numpy as np
 from datetime import datetime, timedelta
+
+from solar_regatta.ml import evaluate_model, prepare_training_data, train_speed_model
 
 _GEOD = pyproj.Geod(ellps='WGS84')
 _MGRS = mgrs.MGRS()
+
 
 def dist(sp, ep):
     """Calculate distance and azimuth between two MGRS points"""
@@ -51,7 +53,7 @@ def calculate_speeds(gps_points, timestamps):
                 speeds.append(speed)
             else:
                 speeds.append(0)
-        except:
+        except Exception:
             speeds.append(0)
 
     return speeds
@@ -144,8 +146,6 @@ def generate_sample_vesc_data(duration_seconds=300, interval=5):
     battery_voltage = []
     motor_current = []
 
-    # Starting location (MGRS format example)
-    start_mgrs = "10SEG6400050000"
     start_time = datetime(2025, 10, 30, 14, 30, 0)
 
     # Simulate VESC data over time
@@ -306,22 +306,42 @@ if __name__ == "__main__":
     print(f"End Position:     {gps_points[-1]}")
     print("=" * 70)
 
+    # Train ML model on simulated data
+    model = train_speed_model(speeds, battery_voltage, motor_current, timestamps)
+    features, targets, _ = prepare_training_data(speeds, battery_voltage, motor_current, timestamps)
+    regression_metrics = evaluate_model(model, features, targets)
+    print("\nREGRESSION METRICS")
+    for key, value in regression_metrics.items():
+        print(f"  {key}: {value:.5f}")
+
     # Create visualizations
     print("\n[4] Creating speed vs time plot...")
-    plt1 = plot_speed_vs_time(speeds, timestamps,
-                              title="Solar Boat Speed vs Time")
+    plt1 = plot_speed_vs_time(
+        speeds,
+        timestamps,
+        title="Solar Boat Speed vs Time"
+    )
     plt1.savefig('solar_boat_speed.png', dpi=150, bbox_inches='tight')
     print("    Saved: solar_boat_speed.png")
 
     print("\n[5] Creating comprehensive telemetry dashboard...")
-    fig = plot_all_metrics(speeds, battery_voltage, motor_current,
-                          timestamps, gps_points)
+    fig = plot_all_metrics(
+        speeds,
+        battery_voltage,
+        motor_current,
+        timestamps,
+        gps_points
+    )
     fig.savefig('solar_boat_telemetry_dashboard.png', dpi=150, bbox_inches='tight')
     print("    Saved: solar_boat_telemetry_dashboard.png")
 
     print("\n[6] Creating speed plot with GPS coordinates...")
-    fig2, ax = plot_with_coordinates(speeds, timestamps, gps_points,
-                                     title="Speed vs Time with GPS Data")
+    fig2, ax = plot_with_coordinates(
+        speeds,
+        timestamps,
+        gps_points,
+        title="Speed vs Time with GPS Data"
+    )
     fig2.savefig('solar_boat_speed_with_gps.png', dpi=150, bbox_inches='tight')
     print("    Saved: solar_boat_speed_with_gps.png")
 
@@ -336,5 +356,5 @@ if __name__ == "__main__":
     # Display plots
     try:
         plt.show()
-    except:
+    except Exception:
         print("\nNote: Plots were saved to files. Display skipped in headless mode.")

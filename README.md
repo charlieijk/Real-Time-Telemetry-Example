@@ -1,6 +1,6 @@
 # Solar Regatta - Real-Time Telemetry Analysis
 
-A comprehensive Python package for analyzing and visualizing solar boat race telemetry data. Features interactive web dashboards, real-time performance metrics, GPS tracking, and VESC motor controller analysis.
+A comprehensive Python package for analyzing, modeling, and visualizing solar boat race telemetry data. Features machine-learning friendly helpers, interactive dashboards for notebooks, real-time performance metrics, GPS tracking, and VESC motor controller analysis.
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -19,17 +19,17 @@ A comprehensive Python package for analyzing and visualizing solar boat race tel
 - Motor current analysis and efficiency metrics
 - Comprehensive performance statistics
 
-🌐 **Web-Based Interface**
-- Modern, responsive dashboard design
-- Works on desktop and mobile devices
-- No installation required for viewing data
-- Real-time interactive charts with Plotly
+🌐 **Interactive Visualizations**
+- Plotly helpers that render directly in notebooks
+- Works offline—perfect for quick experimentation
+- Ready-to-use Jupyter notebooks
+- Export-ready chart objects for custom dashboards
 
 🐍 **Python Library**
-- Easy-to-use API for data analysis
-- Can be used programmatically or via web interface
+- Easy-to-use API for data analysis and modeling
 - Sample data generation for testing
 - Matplotlib and Plotly visualizations
+- CLI workflow for generating telemetry and training models
 
 ## Quick Start
 
@@ -73,17 +73,34 @@ metrics = analyze_performance(speeds, battery_voltage, motor_current, timestamps
 plot_all_metrics(speeds, battery_voltage, motor_current, timestamps, gps_points)
 ```
 
-#### Run the Web Dashboard
+#### Build a Lightweight ML Model
 
-```bash
-python -m solar_regatta.web.app
+```python
+from solar_regatta import (
+    generate_sample_vesc_data,
+    calculate_speeds,
+    train_speed_model,
+    prepare_training_data,
+    evaluate_model,
+)
+
+gps_points, timestamps, speeds_raw, battery_voltage, motor_current = \
+    generate_sample_vesc_data(duration_seconds=300, interval=5)
+speeds = calculate_speeds(gps_points, timestamps)
+model = train_speed_model(speeds, battery_voltage, motor_current, timestamps)
+X, y, _ = prepare_training_data(speeds, battery_voltage, motor_current, timestamps)
+evaluate_model(model, X, y)
 ```
 
-Then open your browser to: **http://localhost:5001**
+#### Train a Predictive Model via CLI
 
-1. Click "Load Sample Data" to generate test data
-2. View interactive charts for speed, voltage, current, and efficiency
-3. Export data as JSON for further analysis
+Use the included command-line tool to simulate telemetry, fit a regression model, and export the coefficients:
+
+```bash
+solar-regatta --duration 600 --interval 5 --save-model model.json --export-predictions predictions.json
+```
+
+The CLI prints summary metrics and stores the learned weights in a portable JSON file.
 
 ### Example Script
 
@@ -114,6 +131,25 @@ Run the example:
 python example_vesc_plot.py
 ```
 
+### Jupyter Notebooks
+
+Interactive notebooks are available in the `notebooks/` directory:
+
+- `Solar_Regatta_Quickstart.ipynb` – walk through sample data generation, analysis, and Matplotlib visualizations.
+- `Solar_Regatta_Plotly_Dashboard.ipynb` – render the Plotly figures used by the dashboards directly inside Jupyter.
+
+Open them with JupyterLab or VS Code to experiment with live telemetry or tweak the sample data generator.
+
+### Machine Learning Utilities
+
+The `solar_regatta.ml` module provides lightweight linear regression helpers:
+
+- `prepare_training_data` – build feature/target matrices that predict the next speed sample from voltage, current, and timing history.
+- `train_speed_model` – fit a regression model (implemented with NumPy’s least-squares solver).
+- `evaluate_model` and `forecast_speed_curve` – inspect model quality and produce predictions for your feature matrix.
+
+Combine them with `generate_sample_vesc_data` or your real telemetry feeds to prototype smarter control strategies directly inside notebooks or scripts.
+
 ## Core Modules
 
 ### `solar_regatta.core.analysis`
@@ -127,14 +163,14 @@ python example_vesc_plot.py
 - `plot_all_metrics(speeds, battery_voltage, motor_current, timestamps, gps_points)` - Dashboard visualization
 - `dist(sp, ep)` - Calculate distance between MGRS coordinates
 
-### `solar_regatta.web.app`
+### `solar_regatta.viz.plotly_charts`
 
-Flask web server providing:
-- **GET /** - Main dashboard page
-- **POST /api/load-sample-data** - Load sample VESC telemetry
-- **GET /api/charts** - Retrieve all Plotly chart JSON
-- **GET /api/metrics** - Get performance statistics
-- **GET /api/export** - Export data as JSON
+Plotly helpers for notebook dashboards:
+- `create_speed_plot(speeds, timestamps)` - Interactive speed vs time chart
+- `create_voltage_plot(battery_voltage, timestamps)` - Battery health visualization
+- `create_current_plot(motor_current, timestamps)` - Current draw over time
+- `create_efficiency_plot(speeds, motor_current)` - Scatter of speed vs current
+- `create_gps_path_plot(gps_points)` - Simple sequential GPS path
 
 ## API Reference
 
@@ -203,54 +239,44 @@ Supports both:
 - Python `datetime` objects
 - Unix timestamps (seconds)
 
-## Web Dashboard
+## Modeling & Visualization Workflows
 
-The Flask web interface provides:
+The notebooks and CLI provide:
 
-### Metrics Display
-- Maximum, minimum, and average speeds
-- Battery voltage range with low cutoff warning
-- Motor current statistics
-- Total distance and duration
-- Start and end GPS positions
-
-### Interactive Charts
-1. **Speed vs Time** - Performance over the race
-2. **Battery Voltage** - Power system monitoring
-3. **Motor Current** - Power consumption analysis
-4. **Efficiency Plot** - Speed vs current relationship
-5. **GPS Track** - Location sequence visualization
-
-### Data Export
-Export all data as JSON for external analysis and processing.
+- **Metrics Display** – Maximum/minimum speed, average speed, current draw, battery voltage windows, total distance, and race duration.
+- **Interactive Charts** – Speed vs time, battery voltage, motor current, efficiency scatter plots, and GPS track visualizations using Plotly figures.
+- **Model Training** – Quickly fit linear regression models that predict future speeds from voltage/current/elapsed time and export the coefficients as JSON.
+- **Data Export** – Save predicted speed curves for downstream use.
 
 ## Architecture
 
 ```
 Solar Regatta
-├── Core Analysis Module
+├── Core analysis (solar_regatta/core)
 │   ├── GPS distance calculations
 │   ├── Speed computations
 │   ├── Performance metrics
 │   └── Matplotlib visualizations
-│
-└── Web Dashboard
-    ├── Flask backend
-    ├── Plotly interactive charts
-    ├── Real-time data processing
-    └── JSON API endpoints
+├── ML utilities (solar_regatta/ml)
+│   ├── Feature preparation
+│   ├── Linear regression helpers
+│   └── Evaluation helpers
+├── Plotly visuals (solar_regatta/viz)
+│   └── Notebook-friendly chart builders
+└── Notebooks & CLI
+    ├── Example notebooks in /notebooks
+    └── `solar-regatta` command for quick experiments
 ```
 
 ## Requirements
 
 - Python 3.8 or higher
-- Flask 3.0.0
 - Plotly 5.17.0
 - Matplotlib 3.8.0
 - NumPy 1.24.3
 - MGRS 1.4.6
 
-All dependencies are automatically installed with the package.
+All dependencies are installed automatically with `pip install -e .`.
 
 ## Installation Troubleshooting
 
@@ -259,49 +285,38 @@ All dependencies are automatically installed with the package.
 pip install -e .
 ```
 
-**Flask or other import errors**
+**Plotly or NumPy import errors**
 ```bash
 pip install -r requirements.txt
 ```
 
-**Template or static file issues**
+**CLI not found**
 ```bash
-pip uninstall solar-regatta
 pip install -e .
 ```
-
-See [INSTALLATION.md](INSTALLATION.md) for detailed setup instructions.
 
 ## Project Structure
 
 ```
 Real-Time-Telemetry-Example/
-├── README.md                      # This file
-├── INSTALLATION.md                # Installation guide
-├── QUICKSTART.md                  # Quick start guide
-├── FLASK_README.md                # Web dashboard documentation
-├── setup.py                       # Package setup
-├── pyproject.toml                 # Modern Python packaging
-├── requirements.txt               # Dependencies
-├── example_vesc_plot.py          # Example script
-│
-├── solar_regatta/                # Main package
-│   ├── __init__.py               # Package exports
-│   ├── core/
-│   │   ├── __init__.py
-│   │   └── analysis.py           # Core analysis functions
-│   └── web/
-│       ├── __init__.py
-│       └── app.py                # Flask web server
-│
-├── templates/
-│   └── dashboard.html            # Web UI template
-│
-├── static/
-│   ├── css/
-│   │   └── style.css             # Dashboard styles
-│   └── js/
-│       └── dashboard.js          # Client-side logic
+├── README.md
+├── requirements.txt
+├── setup.py
+├── pyproject.toml
+├── example_vesc_plot.py            # Matplotlib example
+├── solar.py                        # Stand-alone analysis script
+├── notebooks/                      # Interactive workflows
+│   ├── Solar_Regatta_Quickstart.ipynb
+│   └── Solar_Regatta_Plotly_Dashboard.ipynb
+└── solar_regatta/                  # Installable package
+    ├── __init__.py
+    ├── cli.py                      # Command-line entry point
+    ├── core/
+    │   └── analysis.py
+    ├── ml/
+    │   └── models.py
+    └── viz/
+        └── plotly_charts.py
 ```
 
 ## Usage Examples
@@ -397,14 +412,12 @@ For issues, questions, or suggestions:
 - Pixel Club SF for the solar boat racing initiative
 - VESC (Vedder's ESC) community for motor controller telemetry data
 - Plotly for interactive visualization
-- Flask for web framework
+- NumPy community for dependable scientific tooling
 
 ---
 
 **Get started now!**
 ```bash
 pip install -e .
-python -m solar_regatta.web.app
+solar-regatta --duration 600 --interval 5 --save-model model.json
 ```
-
-Then visit: http://localhost:5001

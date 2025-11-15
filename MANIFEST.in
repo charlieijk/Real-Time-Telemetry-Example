@@ -1,8 +1,4 @@
 include README.md
 include LICENSE
-include QUICKSTART.md
-include FLASK_README.md
 include requirements.txt
-recursive-include solar_regatta/templates *
-recursive-include solar_regatta/web/static *
-recursive-include solar_regatta/static *
+recursive-include notebooks *.ipynb

@@ -2,8 +2,9 @@
 Example: How to plot speed vs time with GPS coordinates from VESC data
 """
 
+from datetime import datetime
+
 from solar_regatta import calculate_speeds, plot_speed_vs_time, plot_with_coordinates
-from datetime import datetime, timedelta
 
 # Example 1: Using MGRS coordinates with timestamps
 # Replace these with your actual VESC GPS data
@@ -31,8 +32,12 @@ plt.show()
 
 # Plot 2: Speed vs time with GPS coordinates
 print("Plotting with GPS coordinates...")
-fig, ax = plot_with_coordinates(speeds, timestamps, gps_points,
-                                 title="Solar Boat Speed vs Time (with GPS Data)")
+fig, ax = plot_with_coordinates(
+    speeds,
+    timestamps,
+    gps_points,
+    title="Solar Boat Speed vs Time (with GPS Data)"
+)
 fig.savefig('solar_boat_speed.png', dpi=150)  # Save to file
 fig.show()
 
