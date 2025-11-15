@@ -1,5 +1,7 @@
 import pyproj
 import mgrs
+import matplotlib
+matplotlib.use('Agg')  # Non-interactive backend for headless environments
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 
