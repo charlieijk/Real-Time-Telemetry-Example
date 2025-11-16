@@ -1,327 +1,124 @@
+---
+title: Solar Regatta - ML Telemetry Analysis
+emoji: 🚤
+colorFrom: blue
+colorTo: green
+sdk: static
+pinned: false
+license: mit
+tags:
+- machine-learning
+- telemetry
+- time-series
+- solar-boat
+- jupyter
+- data-analysis
+---
+
 # Solar Regatta - Real-Time Telemetry Analysis
 
-A comprehensive Python package for analyzing, modeling, and visualizing solar boat race telemetry data. Features machine-learning friendly helpers, interactive dashboards for notebooks, real-time performance metrics, GPS tracking, and VESC motor controller analysis.
+A comprehensive Python package for analyzing, modeling, and visualizing solar boat race telemetry data with advanced machine learning capabilities.
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+## 🎯 What is this?
 
-## Features
+This project provides a complete toolkit for analyzing telemetry data from solar-powered boats, featuring:
 
-🚤 **Real-Time Telemetry Visualization**
-- Interactive dashboard with live data updates
-- Speed, voltage, current, and efficiency charts
-- GPS track visualization and path analysis
+- **Advanced ML Models**: Random Forest, XGBoost, LightGBM for speed prediction
+- **Feature Engineering**: 60+ engineered features from raw telemetry
+- **Anomaly Detection**: Statistical and domain-specific anomaly detection
+- **Interactive Notebooks**: Jupyter notebooks for hands-on learning
+- **Real-time Analysis**: GPS tracking, battery monitoring, motor current analysis
+- **VESC Integration**: Data collection from VESC motor controllers
 
-📊 **Performance Analytics**
-- Speed calculations from GPS coordinates
-- Battery voltage monitoring with cutoff warnings
-- Motor current analysis and efficiency metrics
-- Comprehensive performance statistics
-
-🌐 **Interactive Visualizations**
-- Plotly helpers that render directly in notebooks
-- Works offline—perfect for quick experimentation
-- Ready-to-use Jupyter notebooks
-- Export-ready chart objects for custom dashboards
-
-🐍 **Python Library**
-- Easy-to-use API for data analysis and modeling
-- Sample data generation for testing
-- Matplotlib and Plotly visualizations
-- CLI workflow for generating telemetry and training models
-
-## Quick Start
+## 🚀 Quick Start
 
 ### Installation
 
-**Option 1: Install from GitHub**
 ```bash
-git clone https://github.com/pixelclubsf/Real-Time-Telemetry-Example.git
-cd Real-Time-Telemetry-Example
+git clone https://huggingface.co/spaces/YOUR_USERNAME/solar-regatta
+cd solar-regatta
 pip install -e .
 ```
 
-**Option 2: Install normally (no development mode)**
+For advanced ML features:
 ```bash
-pip install .
+pip install -e ".[ml-advanced]"
 ```
 
-### Usage
-
-#### As a Python Library
-
-```python
-from solar_regatta import (
-    generate_sample_vesc_data,
-    calculate_speeds,
-    analyze_performance,
-    plot_all_metrics
-)
-
-# Generate sample telemetry data
-gps_points, timestamps, speeds_raw, battery_voltage, motor_current = \
-    generate_sample_vesc_data(duration_seconds=300, interval=5)
-
-# Calculate speeds from GPS coordinates
-speeds = calculate_speeds(gps_points, timestamps)
-
-# Analyze performance metrics
-metrics = analyze_performance(speeds, battery_voltage, motor_current, timestamps)
-
-# Create visualizations
-plot_all_metrics(speeds, battery_voltage, motor_current, timestamps, gps_points)
+For VESC integration:
+```bash
+pip install -e ".[vesc]"
 ```
 
-#### Build a Lightweight ML Model
-
-```python
-from solar_regatta import (
-    generate_sample_vesc_data,
-    calculate_speeds,
-    train_speed_model,
-    prepare_training_data,
-    evaluate_model,
-)
-
-gps_points, timestamps, speeds_raw, battery_voltage, motor_current = \
-    generate_sample_vesc_data(duration_seconds=300, interval=5)
-speeds = calculate_speeds(gps_points, timestamps)
-model = train_speed_model(speeds, battery_voltage, motor_current, timestamps)
-X, y, _ = prepare_training_data(speeds, battery_voltage, motor_current, timestamps)
-evaluate_model(model, X, y)
-```
-
-#### Train a Predictive Model via CLI
-
-Use the included command-line tool to simulate telemetry, fit a regression model, and export the coefficients:
+### Run Example
 
 ```bash
-solar-regatta --duration 600 --interval 5 --save-model model.json --export-predictions predictions.json
+# Simple example
+python example_vesc_plot.py --mode simple
+
+# Full analysis
+python example_vesc_plot.py --mode full
+
+# Without saving plots
+python example_vesc_plot.py --no-save-plots
 ```
 
-The CLI prints summary metrics and stores the learned weights in a portable JSON file.
+### Try the Notebooks
 
-### Example Script
-
-```python
-from solar_regatta import calculate_speeds, plot_speed_vs_time
-from datetime import datetime, timedelta
-
-# Your VESC GPS data in MGRS format
-gps_points = [
-    "10SEG1234567890",
-    "10SEG1234567891",
-    "10SEG1234567892",
-]
-
-timestamps = [
-    datetime(2025, 10, 30, 10, 0, 0),
-    datetime(2025, 10, 30, 10, 0, 10),
-    datetime(2025, 10, 30, 10, 0, 20),
-]
-
-# Calculate and plot speeds
-speeds = calculate_speeds(gps_points, timestamps)
-plot_speed_vs_time(speeds, timestamps, title="Solar Boat Speed Analysis")
-```
-
-Run the example:
 ```bash
-python example_vesc_plot.py
+jupyter lab notebooks/
 ```
 
-### Jupyter Notebooks
+Two comprehensive notebooks available:
+- **Advanced_ML_Tutorial.ipynb** - Complete ML pipeline with feature engineering
+- **Anomaly_Detection.ipynb** - Telemetry anomaly detection workflows
 
-Interactive notebooks are available in the `notebooks/` directory:
+## 📊 Features
 
-- `Solar_Regatta_Quickstart.ipynb` – walk through sample data generation, analysis, and Matplotlib visualizations.
-- `Solar_Regatta_Plotly_Dashboard.ipynb` – render the Plotly figures used by the dashboards directly inside Jupyter.
+### Machine Learning Capabilities
 
-Open them with JupyterLab or VS Code to experiment with live telemetry or tweak the sample data generator.
+#### Feature Engineering
+- **Rolling Statistics**: Mean, std, max, min over configurable windows
+- **Lag Features**: Historical values for temporal context
+- **Derivatives**: Speed changes, acceleration patterns
+- **Physics Features**: Power, efficiency, energy consumption
 
-### Machine Learning Utilities
+#### Models
+- **Linear Regression**: Lightweight baseline (NumPy-only)
+- **Random Forest**: Ensemble tree model
+- **XGBoost**: Gradient boosting with regularization
+- **LightGBM**: Fast gradient boosting
 
-The `solar_regatta.ml` module provides lightweight linear regression helpers:
+#### Evaluation
+- **Time-series CV**: Respects temporal ordering
+- **Comprehensive Metrics**: MSE, RMSE, MAE, R², MAPE, Max Error
+- **Model Comparison**: Automated comparison across models
+- **Feature Importance**: Understanding what drives predictions
 
-- `prepare_training_data` – build feature/target matrices that predict the next speed sample from voltage, current, and timing history.
-- `train_speed_model` – fit a regression model (implemented with NumPy’s least-squares solver).
-- `evaluate_model` and `forecast_speed_curve` – inspect model quality and produce predictions for your feature matrix.
+### Anomaly Detection
 
-Combine them with `generate_sample_vesc_data` or your real telemetry feeds to prototype smarter control strategies directly inside notebooks or scripts.
+- **Voltage Anomalies**: Low battery, overvoltage, rapid changes
+- **Current Spikes**: Abnormal motor current patterns
+- **GPS Anomalies**: Impossible speeds, acceleration limits
+- **Statistical Outliers**: Z-score and IQR methods
 
-## Core Modules
+### VESC Integration
 
-### `solar_regatta.core.analysis`
+- **Data Collection**: Real-time telemetry from VESC motor controllers
+- **Annotation Tools**: Label sessions for ML training
+- **Serial Interface**: USB/serial connection support
 
-**Functions:**
-- `calculate_speeds(gps_points, timestamps)` - Calculate speed from GPS coordinates
-- `generate_sample_vesc_data(duration_seconds, interval)` - Generate realistic sample data
-- `analyze_performance(speeds, battery_voltage, motor_current, timestamps)` - Calculate metrics
-- `plot_speed_vs_time(speeds, timestamps, title)` - Create speed visualization
-- `plot_with_coordinates(speeds, timestamps, gps_points, title)` - Plot with GPS info
-- `plot_all_metrics(speeds, battery_voltage, motor_current, timestamps, gps_points)` - Dashboard visualization
-- `dist(sp, ep)` - Calculate distance between MGRS coordinates
+## 🎓 Use Cases
 
-### `solar_regatta.viz.plotly_charts`
+1. **Racing Performance**: Analyze race telemetry to optimize strategy
+2. **Battery Management**: Monitor battery health and predict range
+3. **Motor Efficiency**: Understand motor performance patterns
+4. **Predictive Maintenance**: Detect anomalies before failures
+5. **ML Education**: Learn time-series ML with real-world data
 
-Plotly helpers for notebook dashboards:
-- `create_speed_plot(speeds, timestamps)` - Interactive speed vs time chart
-- `create_voltage_plot(battery_voltage, timestamps)` - Battery health visualization
-- `create_current_plot(motor_current, timestamps)` - Current draw over time
-- `create_efficiency_plot(speeds, motor_current)` - Scatter of speed vs current
-- `create_gps_path_plot(gps_points)` - Simple sequential GPS path
+## 📈 Example Usage
 
-## API Reference
-
-### Calculate Speeds from GPS
-
-```python
-from solar_regatta import calculate_speeds
-from datetime import datetime, timedelta
-
-# MGRS coordinates
-gps_points = ["10SEG1234567890", "10SEG1234567891"]
-# DateTime objects
-timestamps = [datetime(2025, 10, 30, 10, 0, 0), datetime(2025, 10, 30, 10, 0, 10)]
-
-# Returns list of speeds in m/s
-speeds = calculate_speeds(gps_points, timestamps)
-```
-
-### Generate Sample Data
-
-```python
-from solar_regatta import generate_sample_vesc_data
-
-gps_points, timestamps, speeds_raw, battery_voltage, motor_current = \
-    generate_sample_vesc_data(duration_seconds=300, interval=5)
-```
-
-**Parameters:**
-- `duration_seconds` (int): Total simulation time in seconds (default: 300)
-- `interval` (int): Time between GPS samples in seconds (default: 5)
-
-**Returns:**
-- `gps_points`: List of MGRS coordinates
-- `timestamps`: List of datetime objects
-- `speeds_raw`: List of simulated speeds
-- `battery_voltage`: List of voltage readings
-- `motor_current`: List of current readings
-
-### Analyze Performance
-
-```python
-from solar_regatta import analyze_performance
-
-metrics = analyze_performance(speeds, battery_voltage, motor_current, timestamps)
-
-# metrics dict contains:
-# - max_speed, min_speed, avg_speed (m/s)
-# - max_voltage, min_voltage (V)
-# - max_current, avg_current (A)
-# - distance (m)
-# - duration (seconds)
-```
-
-## Data Formats
-
-### GPS Coordinates
-
-The package uses **MGRS (Military Grid Reference System)** format for GPS coordinates:
-- Format: `10SEG6400050000` (15 characters)
-- Example: `"10SEG1234567890"`
-- Converted internally to lat/lon for distance calculations
-
-### Timestamps
-
-Supports both:
-- Python `datetime` objects
-- Unix timestamps (seconds)
-
-## Modeling & Visualization Workflows
-
-The notebooks and CLI provide:
-
-- **Metrics Display** – Maximum/minimum speed, average speed, current draw, battery voltage windows, total distance, and race duration.
-- **Interactive Charts** – Speed vs time, battery voltage, motor current, efficiency scatter plots, and GPS track visualizations using Plotly figures.
-- **Model Training** – Quickly fit linear regression models that predict future speeds from voltage/current/elapsed time and export the coefficients as JSON.
-- **Data Export** – Save predicted speed curves for downstream use.
-
-## Architecture
-
-```
-Solar Regatta
-├── Core analysis (solar_regatta/core)
-│   ├── GPS distance calculations
-│   ├── Speed computations
-│   ├── Performance metrics
-│   └── Matplotlib visualizations
-├── ML utilities (solar_regatta/ml)
-│   ├── Feature preparation
-│   ├── Linear regression helpers
-│   └── Evaluation helpers
-├── Plotly visuals (solar_regatta/viz)
-│   └── Notebook-friendly chart builders
-└── Notebooks & CLI
-    ├── Example notebooks in /notebooks
-    └── `solar-regatta` command for quick experiments
-```
-
-## Requirements
-
-- Python 3.8 or higher
-- Plotly 5.17.0
-- Matplotlib 3.8.0
-- NumPy 1.24.3
-- MGRS 1.4.6
-
-All dependencies are installed automatically with `pip install -e .`.
-
-## Installation Troubleshooting
-
-**ModuleNotFoundError: No module named 'solar_regatta'**
-```bash
-pip install -e .
-```
-
-**Plotly or NumPy import errors**
-```bash
-pip install -r requirements.txt
-```
-
-**CLI not found**
-```bash
-pip install -e .
-```
-
-## Project Structure
-
-```
-Real-Time-Telemetry-Example/
-├── README.md
-├── requirements.txt
-├── setup.py
-├── pyproject.toml
-├── example_vesc_plot.py            # Matplotlib example
-├── solar.py                        # Stand-alone analysis script
-├── notebooks/                      # Interactive workflows
-│   ├── Solar_Regatta_Quickstart.ipynb
-│   └── Solar_Regatta_Plotly_Dashboard.ipynb
-└── solar_regatta/                  # Installable package
-    ├── __init__.py
-    ├── cli.py                      # Command-line entry point
-    ├── core/
-    │   └── analysis.py
-    ├── ml/
-    │   └── models.py
-    └── viz/
-        └── plotly_charts.py
-```
-
-## Usage Examples
-
-### Basic Analysis Script
+### Basic Analysis
 
 ```python
 from solar_regatta import (
@@ -330,94 +127,167 @@ from solar_regatta import (
     analyze_performance
 )
 
-# Generate sample data (300 second race)
-gps, timestamps, speeds_raw, voltage, current = \
+# Generate sample data
+gps, timestamps, speeds, voltage, current = \
     generate_sample_vesc_data(duration_seconds=300, interval=5)
 
-# Calculate speeds
+# Calculate speeds from GPS
 speeds = calculate_speeds(gps, timestamps)
 
-# Get metrics
+# Get performance metrics
 metrics = analyze_performance(speeds, voltage, current, timestamps)
 
 print(f"Max Speed: {metrics['max_speed']:.2f} m/s")
-print(f"Avg Speed: {metrics['avg_speed']:.2f} m/s")
 print(f"Distance: {metrics['distance']:.1f} m")
-print(f"Duration: {metrics['duration']:.0f} seconds")
 ```
 
-### Custom GPS Data
+### Advanced ML Pipeline
 
 ```python
-from solar_regatta import calculate_speeds
-from datetime import datetime, timedelta
+from solar_regatta.ml import (
+    FeatureEngineer,
+    XGBoostSpeedModel,
+    evaluate_model,
+    cross_validate
+)
 
-# Your actual VESC GPS data
-your_gps_points = ["10SEG...", "10SEG...", ...]
-your_timestamps = [datetime(...), datetime(...), ...]
+# Create feature engineer
+engineer = FeatureEngineer(
+    rolling_windows=[3, 5, 10],
+    lag_features=3,
+    include_derivatives=True,
+    include_physics=True
+)
 
-speeds = calculate_speeds(your_gps_points, your_timestamps)
+# Engineer features
+X = engineer.fit_transform(speeds, voltages, currents)
+y = speeds[engineer.feature_delay:]
+
+# Train XGBoost model
+model = XGBoostSpeedModel(n_estimators=100)
+model.fit(X, y)
+
+# Evaluate
+metrics = evaluate_model(model, X_test, y_test)
+print(f"RMSE: {metrics['rmse']:.4f}")
+print(f"R²: {metrics['r2']:.4f}")
 ```
 
-### Data Export
+### Anomaly Detection
 
 ```python
-import json
-from solar_regatta import generate_sample_vesc_data, calculate_speeds
+from solar_regatta.ml import (
+    detect_voltage_anomalies,
+    detect_current_spikes,
+    SimpleAnomalyDetector
+)
 
-# Generate data
-gps, timestamps, speeds_raw, voltage, current = \
-    generate_sample_vesc_data()
+# Detect voltage issues
+low_v, high_v, rapid = detect_voltage_anomalies(
+    voltages,
+    low_threshold=10.5,
+    high_threshold=14.0
+)
 
-speeds = calculate_speeds(gps, timestamps)
+# Detect current spikes
+spikes = detect_current_spikes(currents, spike_threshold=3.0)
 
-# Export to JSON
-data = {
-    'gps_points': gps,
-    'speeds': speeds,
-    'battery_voltage': voltage,
-    'motor_current': current
-}
-
-with open('telemetry_data.json', 'w') as f:
-    json.dump(data, f, indent=2, default=str)
+# Statistical anomalies
+detector = SimpleAnomalyDetector(method='zscore', threshold=3.0)
+detector.fit(speeds)
+anomalies = detector.predict(speeds)
 ```
 
-## Contributing
+## 🏗️ Architecture
 
-Contributions are welcome! Please feel free to submit issues and pull requests.
+```
+solar_regatta/
+├── core/           # Core analysis functions
+│   └── analysis.py # GPS, speed calculations, metrics
+├── ml/             # Machine learning
+│   ├── models.py       # Linear regression baseline
+│   ├── features.py     # Feature engineering
+│   ├── tree_models.py  # RF, XGBoost, LightGBM
+│   ├── evaluation.py   # CV, metrics, comparison
+│   └── anomaly.py      # Anomaly detection
+├── vesc/           # VESC integration
+│   └── collector.py    # Data collection
+└── viz/            # Visualization
+    └── plotly_charts.py
+```
 
-## License
+## 📚 Notebooks
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+### Advanced_ML_Tutorial.ipynb
+Step-by-step tutorial covering:
+1. Data generation and preprocessing
+2. Feature engineering (60+ features)
+3. Model training (Linear, RF, XGBoost)
+4. Feature importance analysis
+5. Cross-validation
+6. Prediction visualization
 
-## Support
+### Anomaly_Detection.ipynb
+Complete anomaly detection guide:
+1. Voltage anomaly detection
+2. Current spike detection
+3. GPS anomaly detection
+4. Statistical outlier detection
+5. Combined reporting
 
-For issues, questions, or suggestions:
-- GitHub Issues: [Open an issue](https://github.com/pixelclubsf/Real-Time-Telemetry-Example/issues)
-- Documentation: See [FLASK_README.md](FLASK_README.md) for detailed feature docs
+## 🛠️ Requirements
 
-## Project Status
+**Core:**
+- Python 3.8+
+- NumPy >= 1.24.3
+- Matplotlib >= 3.8.0
+- Plotly >= 5.17.0
+- mgrs >= 1.4.6
+- pyproj >= 3.6.0
 
-**Version:** 0.1.0 (Alpha)
-**Status:** Active Development
-**Last Updated:** October 2025
+**Advanced ML (optional):**
+- scikit-learn >= 1.3.0
+- xgboost >= 2.0.0
+- lightgbm >= 4.0.0
 
-## Authors
+**VESC (optional):**
+- pyserial >= 3.5
 
-- Charlie Cullen (@charlieijk)
+## 📝 License
 
-## Acknowledgments
+MIT License - see LICENSE file for details.
+
+## 🤝 Contributing
+
+Contributions welcome! Please open issues or submit pull requests.
+
+## 👨‍💻 Author
+
+- Charlie Cullen ([@charlieijk](https://github.com/charlieijk))
+
+## 🙏 Acknowledgments
 
 - Pixel Club SF for the solar boat racing initiative
-- VESC (Vedder's ESC) community for motor controller telemetry data
-- Plotly for interactive visualization
-- NumPy community for dependable scientific tooling
+- VESC community for motor controller telemetry
+- Plotly and NumPy communities
+
+## 📖 Citation
+
+If you use this project in your research, please cite:
+
+```bibtex
+@software{solar_regatta,
+  title = {Solar Regatta: ML Telemetry Analysis for Solar Boats},
+  author = {Cullen, Charlie},
+  year = {2025},
+  url = {https://huggingface.co/spaces/YOUR_USERNAME/solar-regatta}
+}
+```
 
 ---
 
 **Get started now!**
 ```bash
-pip install -e .
-solar-regatta --duration 600 --interval 5 --save-model model.json
+pip install -e ".[all]"
+jupyter lab notebooks/
 ```
