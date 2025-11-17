@@ -8,4 +8,4 @@ xgboost>=2.0.0
 mgrs>=1.4.6
 pyproj>=3.6.0
 pillow>=10.0.0
--e .
+pyserial>=3.5
