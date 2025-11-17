@@ -48,8 +48,10 @@ try:
         LightGBMSpeedModel,
     )
     TREE_MODELS_AVAILABLE = True
-except ImportError:
+except (ImportError, Exception) as e:
+    # Catch all exceptions including XGBoost library loading errors
     TREE_MODELS_AVAILABLE = False
+    # print(f"Tree models not available: {e}")
 
 __all__ = [
     # Core

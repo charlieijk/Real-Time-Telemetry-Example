@@ -14,55 +14,44 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 from PIL import Image
 
-# Import Solar Regatta modules - handle import errors gracefully
-try:
-    from solar_regatta import (
-        generate_sample_vesc_data,
-        calculate_speeds,
-        analyze_performance,
-    )
-    from solar_regatta.ml.models import PerformanceModel
-except Exception as e:
-    print(f"Warning: Core Solar Regatta modules failed to import: {e}")
-
-try:
-    from solar_regatta.ml import (
-        train_speed_model,
-        prepare_training_data,
-        count_model_parameters,
-        FeatureEngineer,
-    )
-except Exception as e:
-    print(f"Warning: ML modules failed to import: {e}")
-
-try:
-    from solar_regatta.viz.plotly_charts import (
-        create_speed_plot,
-        create_voltage_plot,
-        create_current_plot,
-        create_efficiency_plot,
-        create_gps_path_plot,
-    )
-except Exception as e:
-    print(f"Warning: Plotly modules failed to import: {e}")
+# Import Solar Regatta modules
+from solar_regatta import (
+    generate_sample_vesc_data,
+    calculate_speeds,
+    analyze_performance,
+)
+from solar_regatta.ml import (
+    train_speed_model,
+    prepare_training_data,
+    count_model_parameters,
+    FeatureEngineer,
+)
+from solar_regatta.ml.models import PerformanceModel
+from solar_regatta.viz.plotly_charts import (
+    create_speed_plot,
+    create_voltage_plot,
+    create_current_plot,
+    create_efficiency_plot,
+    create_gps_path_plot,
+)
 
 # Try to import tree models
 try:
     from solar_regatta.ml import RandomForestSpeedModel
     SKLEARN_AVAILABLE = True
-except Exception:
+except ImportError:
     SKLEARN_AVAILABLE = False
 
 try:
     from solar_regatta.ml import XGBoostSpeedModel
     XGBOOST_AVAILABLE = True
-except Exception:
+except ImportError:
     XGBOOST_AVAILABLE = False
 
 try:
     from solar_regatta.vesc import VESCDataCollector
     VESC_AVAILABLE = True
-except Exception:
+except ImportError:
     VESC_AVAILABLE = False
 
 
