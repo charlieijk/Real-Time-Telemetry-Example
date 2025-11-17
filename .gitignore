@@ -16,18 +16,14 @@ parts/
 sdist/
 var/
 wheels/
-pip-wheel-metadata/
-share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 
 # Virtual environments
 venv/
 ENV/
 env/
-.venv
 
 # IDEs
 .vscode/
@@ -35,9 +31,28 @@ env/
 *.swp
 *.swo
 *~
-.DS_Store
 
-# Project specific
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data files
+*.csv
+*.json
+!package.json
+*.pkl
+*.h5
+
+# Plots
 *.png
-.env
-.env.local
+*.jpg
+*.pdf
+!docs/*.png
+!docs/*.jpg
+
+# Logs
+*.log
