@@ -1,10 +1,17 @@
 from setuptools import setup, find_packages
 
-with open("requirements.txt") as f:
-    requirements = f.read().splitlines()
-
 with open("README.md", encoding="utf-8") as f:
     long_description = f.read()
+
+# Core dependencies required by the package
+install_requires = [
+    "plotly>=5.17.0",
+    "matplotlib>=3.8.0",
+    "numpy>=1.24.3",
+    "scipy>=1.10.0",
+    "mgrs>=1.4.6",
+    "pyproj>=3.6.0",
+]
 
 setup(
     name="solar-regatta",
@@ -17,7 +24,7 @@ setup(
     url="https://github.com/pixelclubsf/Real-Time-Telemetry-Example",
     packages=find_packages(),
     include_package_data=True,
-    install_requires=requirements,
+    install_requires=install_requires,
     python_requires=">=3.8",
     classifiers=[
         "Development Status :: 3 - Alpha",
