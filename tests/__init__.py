@@ -1,0 +1,1 @@
+"""Solar Regatta Test Suite."""
