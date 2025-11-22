@@ -21,7 +21,7 @@ setup(
     long_description_content_type="text/markdown",
     author="Charlie Cullen",
     author_email="charliewcullen@gmail.com",
-    url="https://github.com/pixelclubsf/Real-Time-Telemetry-Example",
+    url="https://github.com/charlieijk/SolarRegatta2026",
     packages=find_packages(),
     include_package_data=True,
     install_requires=install_requires,
@@ -42,8 +42,8 @@ setup(
     ],
     keywords="solar boat telemetry analysis visualization VESC",
     project_urls={
-        "Bug Reports": "https://github.com/pixelclubsf/Real-Time-Telemetry-Example/issues",
-        "Source": "https://github.com/pixelclubsf/Real-Time-Telemetry-Example",
+        "Bug Reports": "https://github.com/charlieijk/SolarRegatta2026/issues",
+        "Source": "https://github.com/charlieijk/SolarRegatta2026",
     },
     entry_points={
         "console_scripts": [

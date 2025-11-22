@@ -37,9 +37,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/pixelclubsf/Real-Time-Telemetry-Example"
-"Bug Reports" = "https://github.com/pixelclubsf/Real-Time-Telemetry-Example/issues"
-Source = "https://github.com/pixelclubsf/Real-Time-Telemetry-Example"
+Homepage = "https://github.com/charlieijk/SolarRegatta2026"
+"Bug Reports" = "https://github.com/charlieijk/SolarRegatta2026/issues"
+Source = "https://github.com/charlieijk/SolarRegatta2026"
 
 [project.optional-dependencies]
 vesc = [
